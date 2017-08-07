@@ -26,8 +26,8 @@
 #  }
 #
 class apache::mod::status (
-  Array $allow_from                               = ['127.0.0.1','::1'],
-  $requires                                       = '127.0.0.1 ::1',
+  Array $allow_from                               = undef,
+  $requires                                       = undef,
   Enum['On', 'Off', 'on', 'off'] $extended_status = 'On',
   $apache_version                                 = undef,
   $status_path                                    = '/server-status',
@@ -36,6 +36,11 @@ class apache::mod::status (
   include ::apache
   $_apache_version = pick($apache_version, $apache::apache_version)
   ::apache::mod { 'status': }
+
+  # Defaults for "Allow from" or "Require" directives
+  $allow_defaults = ['127.0.0.1','::1']
+  $requires_defaults = 'ip 127.0.0.1 ::1'
+
   # Template uses $allow_from, $extended_status, $_apache_version, $status_path
   file { 'status.conf':
     ensure  => file,
