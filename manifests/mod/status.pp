@@ -27,6 +27,7 @@
 #
 class apache::mod::status (
   Array $allow_from                               = ['127.0.0.1','::1'],
+  $requires                                       = '127.0.0.1 ::1',
   Enum['On', 'Off', 'on', 'off'] $extended_status = 'On',
   $apache_version                                 = undef,
   $status_path                                    = '/server-status',
