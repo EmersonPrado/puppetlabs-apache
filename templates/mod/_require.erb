@@ -1,0 +1,6 @@
+<% if @requires != nil and ! @requires.empty? -%>
+  <%- _requires = @requires -%>
+<% else -%>
+  <%- _requires = @requires_defaults -%>
+<% end -%>
+    Require <%= _requires %>
