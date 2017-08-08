@@ -16,4 +16,13 @@
   <%- _requires.each do |req| -%>
     Require <%= req %>
   <%- end -%>
+<% elsif _requires.is_a?(Hash) -%>
+  <%- if _requires.has_key?('requires') and _requires['requires'].is_a?(Array) -%>
+    <%- _requires['requires'].each do |req| -%>
+        Require <%= req %>
+    <%- end -%>
+  <%- else -%>
+    <%- scope.function_warning(["Class #{@title}: Require hash must have"]) -%>
+    <%- scope.function_warning(["a key named \"requires\" with array value"]) -%>
+  <%- end -%>
 <% end -%>
