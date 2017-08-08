@@ -26,7 +26,7 @@
 #  }
 #
 class apache::mod::status (
-  Array $allow_from                               = undef,
+  Optional[Array] $allow_from                     = undef,
   $requires                                       = undef,
   Enum['On', 'Off', 'on', 'off'] $extended_status = 'On',
   $apache_version                                 = undef,
