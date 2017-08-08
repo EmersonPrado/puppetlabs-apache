@@ -1,4 +1,4 @@
-<% if @requires != nil and ! @requires.empty? -%>
+<% if @requires != nil -%>
   <%- _requires = @requires -%>
 <% elsif @allow_from != nil and ! @allow_from.empty? -%>
   <%- scope.function_warning(["Class #{@title}: Using Allow"]) -%>
@@ -7,4 +7,9 @@
 <% else -%>
   <%- _requires = @requires_defaults -%>
 <% end -%>
+<%-# -%>
+<% if _requires.is_a?(String) -%>
+  <%- if ! ['', 'unmanaged'].include?_requires.downcase -%>
     Require <%= _requires %>
+  <%- end -%>
+<% end -%>
