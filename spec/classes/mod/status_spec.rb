@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 # Helper function for testing the contents of `status.conf`
+# Apache < 2.4
 def status_conf_spec(allow_from, extended_status, status_path)
   it do
     is_expected.to contain_file("status.conf").with_content(
@@ -19,12 +20,29 @@ def status_conf_spec(allow_from, extended_status, status_path)
     )
   end
 end
+# Apache >= 2.4
+def status_conf_spec_require(requires, extended_status, status_path)
+  it do
+    is_expected.to contain_file("status.conf").with_content(
+      "<Location #{status_path}>\n"\
+      "    SetHandler server-status\n"\
+      "    Require #{requires}\n"\
+      "</Location>\n"\
+      "ExtendedStatus #{extended_status}\n"\
+      "\n"\
+      "<IfModule mod_proxy.c>\n"\
+      "    # Show Proxy LoadBalancer status in mod_status\n"\
+      "    ProxyStatus On\n"\
+      "</IfModule>\n"
+    )
+  end
+end
 
 describe 'apache::mod::status', :type => :class do
   it_behaves_like "a mod class, without including apache"
-  
+
   context "default configuration with parameters" do
-    context "on a Debian OS with default params" do
+    context "on a Debian 6 OS with default params" do
       let :facts do
         {
           :osfamily               => 'Debian',
@@ -55,7 +73,7 @@ describe 'apache::mod::status', :type => :class do
 
     end
 
-    context "on a RedHat OS with default params" do
+    context "on a RedHat 6 OS with default params" do
       let :facts do
         {
           :osfamily               => 'RedHat',
@@ -74,6 +92,59 @@ describe 'apache::mod::status', :type => :class do
       status_conf_spec(["127.0.0.1", "::1"], "On", "/server-status")
 
       it { is_expected.to contain_file("status.conf").with_path("/etc/httpd/conf.d/status.conf") }
+
+    end
+
+    context "on a Debian 8 OS with default params" do
+      let :facts do
+        {
+          :osfamily               => 'Debian',
+          :operatingsystemrelease => '8',
+          :concat_basedir         => '/dne',
+          :lsbdistcodename        => 'squeeze',
+          :operatingsystem        => 'Debian',
+          :id                     => 'root',
+          :kernel                 => 'Linux',
+          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+          :is_pe                  => false,
+        }
+      end
+
+      it { is_expected.to contain_apache__mod("status") }
+
+      status_conf_spec_require('ip 127.0.0.1 ::1 192.168', "On", "/server-status")
+
+      it { is_expected.to contain_file("status.conf").with({
+        :ensure => 'file',
+        :path   => '/etc/apache2/mods-available/status.conf',
+      } ) }
+
+      it { is_expected.to contain_file("status.conf symlink").with({
+        :ensure => 'link',
+        :path   => '/etc/apache2/mods-enabled/status.conf',
+      } ) }
+
+    end
+
+    context "on a RedHat 7 OS with default params" do
+      let :facts do
+        {
+          :osfamily               => 'RedHat',
+          :operatingsystemrelease => '7',
+          :concat_basedir         => '/dne',
+          :operatingsystem        => 'RedHat',
+          :id                     => 'root',
+          :kernel                 => 'Linux',
+          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+          :is_pe                  => false,
+        }
+      end
+
+      it { is_expected.to contain_apache__mod("status") }
+
+      status_conf_spec_require('ip 127.0.0.1 ::1 192.168', "On", "/server-status")
+
+      it { is_expected.to contain_file("status.conf").with_path("/etc/httpd/conf.modules.d/status.conf") }
 
     end
 
