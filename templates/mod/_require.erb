@@ -12,4 +12,8 @@
   <%- if ! ['', 'unmanaged'].include?_requires.downcase -%>
     Require <%= _requires %>
   <%- end -%>
+<% elsif _requires.is_a?(Array) -%>
+  <%- _requires.each do |req| -%>
+    Require <%= req %>
+  <%- end -%>
 <% end -%>
