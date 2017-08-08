@@ -110,6 +110,12 @@ describe 'apache::mod::status', :type => :class do
         }
       end
 
+      let :params do
+        {
+          :requires => 'ip 127.0.0.1 ::1 192.168',
+        }
+      end
+
       it { is_expected.to contain_apache__mod("status") }
 
       status_conf_spec_require('ip 127.0.0.1 ::1 192.168', "On", "/server-status")
@@ -137,6 +143,12 @@ describe 'apache::mod::status', :type => :class do
           :kernel                 => 'Linux',
           :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
           :is_pe                  => false,
+        }
+      end
+
+      let :params do
+        {
+          :requires => 'ip 127.0.0.1 ::1 192.168',
         }
       end
 
