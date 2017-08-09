@@ -100,69 +100,74 @@ describe 'apache::mod::status', :type => :class do
 
     end
 
-    context "on a Debian 8 OS with default params" do
-      let :facts do
-        {
-          :osfamily               => 'Debian',
-          :operatingsystemrelease => '8',
-          :concat_basedir         => '/dne',
-          :lsbdistcodename        => 'squeeze',
-          :operatingsystem        => 'Debian',
-          :id                     => 'root',
-          :kernel                 => 'Linux',
-          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-          :is_pe                  => false,
-        }
+    valid_requires = {
+      :string    => 'ip 127.0.0.1 192.168',
+    }
+    valid_requires.each do |req_key, req_value|
+      context "on a Debian 8 OS with default params and #{req_key} requires" do
+        let :facts do
+          {
+            :osfamily               => 'Debian',
+            :operatingsystemrelease => '8',
+            :concat_basedir         => '/dne',
+            :lsbdistcodename        => 'squeeze',
+            :operatingsystem        => 'Debian',
+            :id                     => 'root',
+            :kernel                 => 'Linux',
+            :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+            :is_pe                  => false,
+          }
+        end
+
+        let :params do
+          {
+            :requires => req_value,
+          }
+        end
+
+        it { is_expected.to contain_apache__mod("status") }
+
+        status_conf_spec_require(req_value, "On", "/server-status")
+
+        it { is_expected.to contain_file("status.conf").with({
+          :ensure => 'file',
+          :path   => '/etc/apache2/mods-available/status.conf',
+        } ) }
+
+        it { is_expected.to contain_file("status.conf symlink").with({
+          :ensure => 'link',
+          :path   => '/etc/apache2/mods-enabled/status.conf',
+        } ) }
+
       end
 
-      let :params do
-        {
-          :requires => 'ip 127.0.0.1 ::1 192.168',
-        }
+      context "on a RedHat 7 OS with default params and #{req_key} requires" do
+        let :facts do
+          {
+            :osfamily               => 'RedHat',
+            :operatingsystemrelease => '7',
+            :concat_basedir         => '/dne',
+            :operatingsystem        => 'RedHat',
+            :id                     => 'root',
+            :kernel                 => 'Linux',
+            :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+            :is_pe                  => false,
+          }
+        end
+
+        let :params do
+          {
+            :requires => req_value,
+          }
+        end
+
+        it { is_expected.to contain_apache__mod("status") }
+
+        status_conf_spec_require(req_value, "On", "/server-status")
+
+        it { is_expected.to contain_file("status.conf").with_path("/etc/httpd/conf.modules.d/status.conf") }
+
       end
-
-      it { is_expected.to contain_apache__mod("status") }
-
-      status_conf_spec_require('ip 127.0.0.1 ::1 192.168', "On", "/server-status")
-
-      it { is_expected.to contain_file("status.conf").with({
-        :ensure => 'file',
-        :path   => '/etc/apache2/mods-available/status.conf',
-      } ) }
-
-      it { is_expected.to contain_file("status.conf symlink").with({
-        :ensure => 'link',
-        :path   => '/etc/apache2/mods-enabled/status.conf',
-      } ) }
-
-    end
-
-    context "on a RedHat 7 OS with default params" do
-      let :facts do
-        {
-          :osfamily               => 'RedHat',
-          :operatingsystemrelease => '7',
-          :concat_basedir         => '/dne',
-          :operatingsystem        => 'RedHat',
-          :id                     => 'root',
-          :kernel                 => 'Linux',
-          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-          :is_pe                  => false,
-        }
-      end
-
-      let :params do
-        {
-          :requires => 'ip 127.0.0.1 ::1 192.168',
-        }
-      end
-
-      it { is_expected.to contain_apache__mod("status") }
-
-      status_conf_spec_require('ip 127.0.0.1 ::1 192.168', "On", "/server-status")
-
-      it { is_expected.to contain_file("status.conf").with_path("/etc/httpd/conf.modules.d/status.conf") }
-
     end
 
     context "with custom parameters $allow_from => ['10.10.10.10','11.11.11.11'], $extended_status => 'Off', $status_path => '/custom-status'" do
