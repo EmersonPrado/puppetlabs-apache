@@ -23,7 +23,11 @@ end
 # Apache >= 2.4
 def require_directives(requires)
   if requires.is_a?(String)
-    return "    Require #{requires}\n"
+    if ['','unmanaged'].include?requires.downcase
+      return ''
+    else
+      return "    Require #{requires}\n"
+    end
   end
 end
 def status_conf_spec_require(requires, extended_status, status_path)
@@ -101,6 +105,8 @@ describe 'apache::mod::status', :type => :class do
     end
 
     valid_requires = {
+      :empty     => '',
+      :unmanaged => 'unmanaged',
       :string    => 'ip 127.0.0.1 192.168',
     }
     valid_requires.each do |req_key, req_value|
