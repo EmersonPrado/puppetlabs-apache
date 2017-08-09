@@ -22,13 +22,24 @@ def status_conf_spec(allow_from, extended_status, status_path)
 end
 # Apache >= 2.4
 def require_directives(requires)
-  if requires.nil?
+  if requires == :undef
     return '    Require ip 127.0.0.1 ::1\n'
   elsif requires.is_a?(String)
     if ['','unmanaged'].include?requires.downcase
       return ''
     else
       return "    Require #{requires}\n"
+    end
+  elsif requires.is_a?(Array)
+    return requires.map{ |req| "    Require #{req}\n" }
+  elsif requires.is_a?(Hash)
+    if not requires.has_key?('enforce')
+      return requires['requires'].map{ |req| "    Require #{req}\n" }
+    else
+      return \
+        "    <Require#{_requires['enforce'].capitalize}>\n" + \
+        requires['requires'].map{ |req| "        Require #{req}\n" } + \
+        "    </Require#{_requires['enforce'].capitalize}>\n"
     end
   end
 end
@@ -111,6 +122,24 @@ describe 'apache::mod::status', :type => :class do
       :empty     => '',
       :unmanaged => 'unmanaged',
       :string    => 'ip 127.0.0.1 192.168',
+      :array     => [
+        'ip 127.0.0.1',
+        'ip ::1',
+        'host localhost',
+      ],
+      :hash      => {
+        requires => [
+          'ip 10.1',
+          'host somehost',
+        ],
+      },
+      :enforce   => {
+        enforce => 'all',
+        requires => [
+          'ip 127.0.0.1',
+          'host localhost',
+        ],
+      },
     }
     valid_requires.each do |req_key, req_value|
       context "on a Debian 8 OS with default params and #{req_key} requires" do
