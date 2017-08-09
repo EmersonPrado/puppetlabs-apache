@@ -32,11 +32,11 @@
     <%- indentation = '' -%>
   <%- end -%>
   <%- if _requires.has_key?('requires') and _requires['requires'].is_a?(Array) -%>
-    <%= enforce_open -%>
-    <%- _requires['requires'].each do |req| -%>
-        <%= indentation -%>Require <%= req %>
-    <%- end -%>
-    <%= enforce_close -%>
+<%# %><%= enforce_open -%>
+      <%- _requires['requires'].each do |req| -%>
+<%# %>    <%= indentation -%>Require <%= req %>
+      <%- end -%>
+<%# %><%= enforce_close -%>
   <%- else -%>
     <%- scope.function_warning(["Class #{@title}: Require hash must have"]) -%>
     <%- scope.function_warning(["a key named \"requires\" with array value"]) -%>
