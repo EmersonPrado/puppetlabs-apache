@@ -21,9 +21,9 @@ def status_conf_spec(allow_from, extended_status, status_path)
   end
 end
 # Apache >= 2.4
-def require_directives(requires,defaults)
+def require_directives(requires)
   if requires == nil
-    return "    Require #{defaults}\n"
+    return "    Require ip 127.0.0.1 ::1\n"
   elsif requires.is_a?(String)
     if ['','unmanaged'].include?requires.downcase
       return ''
@@ -32,12 +32,12 @@ def require_directives(requires,defaults)
     end
   end
 end
-def status_conf_spec_require(requires, defaults, extended_status, status_path)
+def status_conf_spec_require(requires, extended_status, status_path)
   it do
     is_expected.to contain_file("status.conf").with_content(
       "<Location #{status_path}>\n"\
       "    SetHandler server-status\n"\
-      "#{require_directives(requires, defaults)}"\
+      "#{require_directives(requires)}"\
       "</Location>\n"\
       "ExtendedStatus #{extended_status}\n"\
       "\n"\
@@ -136,7 +136,7 @@ describe 'apache::mod::status', :type => :class do
 
         it { is_expected.to contain_apache__mod("status") }
 
-        status_conf_spec_require(req_value, requires_defaults, "On", "/server-status")
+        status_conf_spec_require(req_value, "On", "/server-status")
 
         it { is_expected.to contain_file("status.conf").with({
           :ensure => 'file',
@@ -172,7 +172,7 @@ describe 'apache::mod::status', :type => :class do
 
         it { is_expected.to contain_apache__mod("status") }
 
-        status_conf_spec_require(req_value, requires_defaults, "On", "/server-status")
+        status_conf_spec_require(req_value, "On", "/server-status")
 
         it { is_expected.to contain_file("status.conf").with_path("/etc/httpd/conf.modules.d/status.conf") }
 
