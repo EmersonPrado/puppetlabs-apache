@@ -23,7 +23,7 @@ end
 # Apache >= 2.4
 def require_directives(requires)
   if requires == :undef
-    return '    Require ip 127.0.0.1 ::1\n'
+    return "    Require ip 127.0.0.1 ::1\n"
   elsif requires.is_a?(String)
     if ['','unmanaged'].include?requires.downcase
       return ''
