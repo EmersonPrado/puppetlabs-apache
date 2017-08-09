@@ -21,12 +21,17 @@ def status_conf_spec(allow_from, extended_status, status_path)
   end
 end
 # Apache >= 2.4
+def require_directives(requires)
+  if requires.is_a?(String)
+    return "    Require #{requires}\n"
+  end
+end
 def status_conf_spec_require(requires, extended_status, status_path)
   it do
     is_expected.to contain_file("status.conf").with_content(
       "<Location #{status_path}>\n"\
       "    SetHandler server-status\n"\
-      "    Require #{requires}\n"\
+      "#{require_directives(requires)}"\
       "</Location>\n"\
       "ExtendedStatus #{extended_status}\n"\
       "\n"\
