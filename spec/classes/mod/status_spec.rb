@@ -30,6 +30,8 @@ def require_directives(requires)
     else
       return "    Require #{requires}\n"
     end
+  elsif requires.is_a?(Array)
+    return requires.map{ |req| "    Require #{req}\n" }
   end
 end
 def status_conf_spec_require(requires, extended_status, status_path)
@@ -111,6 +113,11 @@ describe 'apache::mod::status', :type => :class do
       :empty     => '',
       :unmanaged => 'unmanaged',
       :string    => 'ip 127.0.0.1 192.168',
+      :array     => [
+        'ip 127.0.0.1',
+        'ip ::1',
+        'host localhost',
+      ],
     }
     valid_requires.each do |req_key, req_value|
       context "on a Debian 8 OS with default params and #{req_key} requires" do
