@@ -35,17 +35,17 @@ def require_directives(requires)
       |req| "    Require #{req}\n"
     end
   elsif requires.is_a?(Hash)
-    unless requires.has_key?(enforce)
-      return requires[requires].each do
+    unless requires.has_key?(:enforce)
+      return requires[:requires].each do
         |req| "    Require #{req}\n"
       end
     else
       return \
-        "    <Require#{requires[enforce].capitalize}>\n" + \
-        requires[requires].each do
+        "    <Require#{requires[:enforce].capitalize}>\n" + \
+        requires[:requires].each do
           |req| "        Require #{req}\n"
         end + \
-        "    </Require#{requires[enforce].capitalize}>\n"
+        "    </Require#{requires[:enforce].capitalize}>\n"
     end
   end
 end
