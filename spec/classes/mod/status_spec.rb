@@ -31,14 +31,14 @@ def require_directives(requires)
       return "    Require #{requires}\n"
     end
   elsif requires.is_a?(Array)
-    return requires.map{ |req| "    Require #{req}\n" }
+    requires.each{ |req| print "    Require #{req}\n" }
   elsif requires.is_a?(Hash)
     unless requires.has_key?('enforce')
-      return requires['requires'].map{ |req| "    Require #{req}\n" }
+      requires['requires'].each{ |req| print "    Require #{req}\n" }
     else
       return \
         "    <Require#{_requires['enforce'].capitalize}>\n" + \
-        requires['requires'].map{ |req| "        Require #{req}\n" } + \
+        requires['requires'].each{ |req| print "        Require #{req}\n" } + \
         "    </Require#{_requires['enforce'].capitalize}>\n"
     end
   end
