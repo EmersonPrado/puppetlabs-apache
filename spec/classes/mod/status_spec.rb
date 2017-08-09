@@ -33,7 +33,14 @@ def require_directives(requires)
   elsif requires.is_a?(Array)
     return requires.map{ |req| "    Require #{req}\n" }
   elsif requires.is_a?(Hash)
-    return requires['requires'].map{ |req| "    Require #{req}\n" }
+    unless requires.has_key?('enforce')
+      return requires['requires'].map{ |req| "    Require #{req}\n" }
+    else
+      return \
+        "    <Require#{_requires['enforce'].capitalize}>\n" + \
+        requires['requires'].map{ |req| "        Require #{req}\n" } + \
+        "    </Require#{_requires['enforce'].capitalize}>\n"
+    end
   end
 end
 def status_conf_spec_require(requires, extended_status, status_path)
@@ -124,6 +131,13 @@ describe 'apache::mod::status', :type => :class do
         :requires => [
           'ip 10.1',
           'host somehost',
+        ],
+      },
+      :enforce   => {
+        :enforce => 'all',
+        :requires => [
+          'ip 127.0.0.1',
+          'host localhost',
         ],
       },
     }
