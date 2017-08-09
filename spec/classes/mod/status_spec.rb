@@ -22,8 +22,8 @@ def status_conf_spec(allow_from, extended_status, status_path)
 end
 # Apache >= 2.4
 def require_directives(requires)
-  if requires == nil
-    return "    Require ip 127.0.0.1 ::1\n"
+  if requires.nil?
+    return '    Require ip 127.0.0.1 ::1\n'
   elsif requires.is_a?(String)
     if ['','unmanaged'].include?requires.downcase
       return ''
@@ -107,7 +107,7 @@ describe 'apache::mod::status', :type => :class do
     end
 
     valid_requires = {
-      :undef     => nil,
+      :undef     => :undef,
       :empty     => '',
       :unmanaged => 'unmanaged',
       :string    => 'ip 127.0.0.1 192.168',
