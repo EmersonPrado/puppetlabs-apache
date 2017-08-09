@@ -33,13 +33,13 @@ def require_directives(requires)
   elsif requires.is_a?(Array)
     requires.each{ |req| print "    Require #{req}\n" }
   elsif requires.is_a?(Hash)
-    unless requires.has_key?('enforce')
-      requires['requires'].each{ |req| print "    Require #{req}\n" }
+    unless requires.has_key?(enforce)
+      requires[requires].each{ |req| print "    Require #{req}\n" }
     else
       return \
-        "    <Require#{_requires['enforce'].capitalize}>\n" + \
-        requires['requires'].each{ |req| print "        Require #{req}\n" } + \
-        "    </Require#{_requires['enforce'].capitalize}>\n"
+        "    <Require#{requires[enforce].capitalize}>\n" + \
+        requires[requires].each{ |req| print "        Require #{req}\n" } + \
+        "    </Require#{requires[enforce].capitalize}>\n"
     end
   end
 end
