@@ -26,11 +26,11 @@
 #  }
 #
 class apache::mod::status (
-  Optional[Array] $allow_from                     = undef,
+  Optional[Array] $allow_from                      = undef,
   Optional[Variant[String, Array, Hash]] $requires = undef,
-  Enum['On', 'Off', 'on', 'off'] $extended_status = 'On',
-  $apache_version                                 = undef,
-  $status_path                                    = '/server-status',
+  Enum['On', 'Off', 'on', 'off'] $extended_status  = 'On',
+  $apache_version                                  = undef,
+  $status_path                                     = '/server-status',
 ) inherits ::apache::params {
 
   include ::apache
