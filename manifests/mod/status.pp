@@ -27,7 +27,7 @@
 #
 class apache::mod::status (
   Optional[Array] $allow_from                     = undef,
-  $requires                                       = undef,
+  Optional[Variant[String, Array, Hash]] $requires = undef,
   Enum['On', 'Off', 'on', 'off'] $extended_status = 'On',
   $apache_version                                 = undef,
   $status_path                                    = '/server-status',
