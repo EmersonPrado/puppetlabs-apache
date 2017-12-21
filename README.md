@@ -2597,14 +2597,14 @@ Installs [`mod_status`][] and uses the `status.conf.erb` template to generate it
 
   - `undef` - Uses `allow_from` and old directive syntax (`Allow from <List of IPs and/or names>`). Issues deprecation warning.
   - String
-    - '' or 'unmanaged' - No auth directives (access controlled elsewhere)
-    - 'ip <List of IPs>' - IPs/ranges allowed to access `/server-status`
-    - 'host <List of names>' - Names/domains allowed to access `/server-status`
-    - 'all [granted|denied]' - Allow / block everyone
+    - `''` or `'unmanaged'` - No auth directives (access controlled elsewhere)
+    - `'ip <List of IPs>'` - IPs/ranges allowed to access `/server-status`
+    - `'host <List of names>'` - Names/domains allowed to access `/server-status`
+    - `'all [granted|denied]'` - Allow / block everyone
   - Array - Each item should be a string from those described above. Results in one directive per array item.
   - Hash with structure below (shown as key => value, where keys are strings):
-    - 'requires' => Array as above - Same effect as the array
-    - 'enforce'  => String 'Any', 'All' or 'None' (optional) - Encloses all directives from 'requires' key in a '<Require(Any|All|None)>' block
+    - `'requires'` => Array as above - Same effect as the array
+    - `'enforce'`  => String `'Any'`, `'All'` or `'None'` (optional) - Encloses all directives from `'requires'` key in a `<Require(Any|All|None)>` block
 
   Default: 'ip 127.0.0.1 ::1'
 
