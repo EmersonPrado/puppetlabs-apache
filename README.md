@@ -2591,7 +2591,7 @@ Installs [`mod_status`][] and uses the `status.conf.erb` template to generate it
 
   Default: ['127.0.0.1','::1'].
 
-* `requires`: A string, an array or a hash, of IPs and/or names that can/can't access `/server-status`, using Apache v. >= 2.4 `mod_authz_host` directives (`require ip`, `require host`, etc.). This parameter should follow one of the structures below:
+* `requires`: A string, an [array][] or a [hash][], of IPs and/or names that can/can't access `/server-status`, using Apache v. >= 2.4 `mod_authz_host` directives (`require ip`, `require host`, etc.). This parameter should follow one of the structures below:
 
   > Only used if Apache version >= 2.4
 
