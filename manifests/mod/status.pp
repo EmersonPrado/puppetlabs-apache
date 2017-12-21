@@ -8,7 +8,7 @@
 #   or networks in CIDR notation specifying what hosts can view the special
 #   /server-status URL.  Defaults to ['127.0.0.1', '::1'].
 #   > Creates Apache < 2.4 directive "Allow from"
-# - $requires is a string with either:
+# - $requires is either a:
 #   - String with:
 #     - '' or 'unmanaged' - Host auth control done elsewhere
 #     - 'ip <List of IPs>' - Allowed IPs/ranges
